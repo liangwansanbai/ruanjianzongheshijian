@@ -15,8 +15,8 @@ import java.util.List;
 public class OrderDao {
 
     public boolean createOrder(int userId, int roomId, Date startDate, Date endDate, BigDecimal totalPrice) throws SQLException {
-        String sql = "INSERT INTO orders (order_id, user_id, room_id, start_date, end_date, total_price, status, create_time) "
-                + "VALUES (seq_orders.NEXTVAL, ?, ?, ?, ?, ?, '待确认', SYSDATE)";
+        String sql = "INSERT INTO orders (user_id, room_id, start_date, end_date, total_price, status) "
+                + "VALUES (?, ?, ?, ?, ?, '待确认')";
         try (Connection connection = DBUtil.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, userId);
@@ -118,7 +118,7 @@ public class OrderDao {
     }
 
     public BigDecimal getTotalIncome() throws SQLException {
-        String sql = "SELECT NVL(SUM(total_price), 0) AS total_income FROM orders WHERE status = '已完成'";
+        String sql = "SELECT COALESCE(SUM(total_price), 0) AS total_income FROM orders WHERE status = '已完成'";
         try (Connection connection = DBUtil.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet resultSet = statement.executeQuery()) {

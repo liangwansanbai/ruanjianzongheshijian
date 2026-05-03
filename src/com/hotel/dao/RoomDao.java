@@ -37,7 +37,7 @@ public class RoomDao {
             parameters.add(status);
         }
         if (notBlank(keyword)) {
-            sql.append(" AND (room_no LIKE ? OR NVL(remark, '') LIKE ?)");
+            sql.append(" AND (room_no LIKE ? OR COALESCE(remark, '') LIKE ?)");
             String fuzzy = "%" + keyword + "%";
             parameters.add(fuzzy);
             parameters.add(fuzzy);
@@ -102,7 +102,7 @@ public class RoomDao {
     }
 
     public boolean insert(Room room) throws SQLException {
-        String sql = "INSERT INTO rooms (room_id, room_no, room_type, price, status, remark) VALUES (seq_rooms.NEXTVAL, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO rooms (room_no, room_type, price, status, remark) VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = DBUtil.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, room.getRoomNo());

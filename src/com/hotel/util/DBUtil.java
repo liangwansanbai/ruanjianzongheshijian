@@ -12,7 +12,7 @@ public final class DBUtil {
         try {
             Class.forName(DatabaseConfig.DRIVER);
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("未找到 Oracle JDBC 驱动，请确认 lib 目录中已放入 ojdbc8.jar", e);
+            throw new RuntimeException("未找到 MySQL JDBC 驱动，请确认 lib 目录中已放入 mysql-connector-java.jar", e);
         }
     }
 

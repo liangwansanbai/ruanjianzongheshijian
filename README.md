@@ -1,6 +1,6 @@
 # 酒店管理系统
 
-一个基于 Java JDBC 和 Oracle 的控制台版酒店管理系统，覆盖课程设计文档中的核心功能：
+一个基于 Java JDBC 和 MySQL 的控制台版酒店管理系统，覆盖课程设计文档中的核心功能：
 
 - 用户登录和角色区分
 - 房间增删改查
@@ -29,11 +29,11 @@ sql
 
 ## 运行前准备
 
-1. 安装 Oracle 数据库并创建一个可用账号。
-2. 执行 `sql/schema.sql` 创建表、序列、索引、视图和触发器。
+1. 安装 MySQL 数据库并创建一个可用账号。
+2. 执行 `sql/schema.sql` 创建表、索引、视图和触发器。
 3. 执行 `sql/init_data.sql` 导入测试数据。
 4. 可选执行 `sql/query_demo.sql` 验证主要查询。
-5. 将 Oracle JDBC 驱动 `ojdbc8.jar` 放到 `lib/` 目录。
+5. 在项目根目录创建 `lib/`，并将 MySQL JDBC 驱动 `mysql-connector-java.jar` 放入该目录。
 6. 修改 `src/com/hotel/config/DatabaseConfig.java` 中的数据库连接信息。
 
 ## 编译
@@ -50,7 +50,7 @@ java -cp "out;lib/*" com.hotel.Main
 
 ## 单元测试
 
-本项目内置了一套不依赖外部测试框架的轻量级单元测试，默认不连接 Oracle，使用内存假数据执行。
+本项目内置了一套不依赖外部测试框架的轻量级单元测试，默认不连接数据库，使用内存假数据执行。
 
 全部执行：
 

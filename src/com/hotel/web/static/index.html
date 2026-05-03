@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Console, Web Skin</title>
+    <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+<div class="page-shell">
+    <aside class="hero-panel">
+        <p class="eyebrow">HOTEL MANAGEMENT</p>
+        <h1>控制台项目的轻量前端</h1>
+        <p class="intro">是一个java+oracle的演示登录、房间、订单和统计流程的轻量级前端。</p>
+        <div class="cred-card">
+            <div>
+                <strong>管理员</strong>
+                <span>`admin / 123456`</span>
+            </div>
+            <div>
+                <strong>用户</strong>
+                <span>`user01 / 123456`</span>
+            </div>
+        </div>
+    </aside>
+
+    <main class="app-panel">
+        <section class="login-card card" id="loginCard">
+            <div class="section-head">
+                <h2>登录系统</h2>
+                <p>先登录，再按角色切换对应操作面板。</p>
+            </div>
+            <form id="loginForm" class="grid two">
+                <label>
+                    <span>用户名</span>
+                    <input name="username" value="admin" required>
+                </label>
+                <label>
+                    <span>密码</span>
+                    <input name="password" type="password" value="123456" required>
+                </label>
+                <button class="primary" type="submit">进入系统</button>
+            </form>
+        </section>
+
+        <section class="session-bar card hidden" id="sessionBar">
+            <div>
+                <strong id="sessionName"></strong>
+                <span id="sessionRole"></span>
+            </div>
+            <button class="ghost" id="logoutBtn" type="button">退出登录</button>
+        </section>
+
+        <section class="tabs hidden" id="tabBar">
+            <button data-tab="rooms" class="tab active">房间查询</button>
+            <button data-tab="booking" class="tab user-only">用户订房</button>
+            <button data-tab="myOrders" class="tab user-only">我的订单</button>
+            <button data-tab="adminRooms" class="tab admin-only">房间管理</button>
+            <button data-tab="adminOrders" class="tab admin-only">订单管理</button>
+            <button data-tab="stats" class="tab admin-only">统计面板</button>
+        </section>
+
+        <section class="content-grid hidden" id="appContent">
+            <div class="card tab-pane active" data-pane="rooms">
+                <div class="section-head">
+                    <h2>房间查询</h2>
+                    <p>对应控制台里的房间条件查询。</p>
+                </div>
+                <form id="roomSearchForm" class="grid five">
+                    <label><span>房型</span><input name="roomType"></label>
+                    <label><span>最低价</span><input name="minPrice" type="number" step="0.01"></label>
+                    <label><span>最高价</span><input name="maxPrice" type="number" step="0.01"></label>
+                    <label><span>状态</span><input name="status"></label>
+                    <label><span>关键词</span><input name="keyword"></label>
+                    <button class="primary" type="submit">查询房间</button>
+                </form>
+                <div id="roomsTable"></div>
+            </div>
+
+            <div class="card tab-pane" data-pane="booking">
+                <div class="section-head">
+                    <h2>用户订房</h2>
+                    <p>对应查询空闲房间和提交预订。</p>
+                </div>
+                <form id="bookForm" class="grid three">
+                    <label><span>房间编号</span><input name="roomId" type="number" required></label>
+                    <label><span>入住日期</span><input name="startDate" type="date" required></label>
+                    <label><span>离店日期</span><input name="endDate" type="date" required></label>
+                    <button class="primary" type="submit">提交预订</button>
+                </form>
+                <button class="ghost" type="button" id="loadAvailableBtn">只看空闲房间</button>
+            </div>
+
+            <div class="card tab-pane" data-pane="myOrders">
+                <div class="section-head">
+                    <h2>我的订单</h2>
+                    <p>对应用户查看和取消自己的订单。</p>
+                </div>
+                <div class="inline-actions">
+                    <button class="primary" type="button" id="loadMyOrdersBtn">刷新我的订单</button>
+                </div>
+                <form id="cancelMineForm" class="grid two">
+                    <label><span>订单编号</span><input name="orderId" type="number" required></label>
+                    <button class="danger" type="submit">取消我的订单</button>
+                </form>
+                <div id="myOrdersTable"></div>
+            </div>
+
+            <div class="card tab-pane" data-pane="adminRooms">
+                <div class="section-head">
+                    <h2>房间管理</h2>
+                    <p>对应新增、修改、删除房间。</p>
+                </div>
+                <form id="roomCreateForm" class="grid five">
+                    <label><span>房间号</span><input name="roomNo" required></label>
+                    <label><span>房型</span><input name="roomType" required></label>
+                    <label><span>价格</span><input name="price" type="number" step="0.01" required></label>
+                    <label><span>状态</span><input name="status" required></label>
+                    <label><span>备注</span><input name="remark"></label>
+                    <button class="primary" type="submit">新增房间</button>
+                </form>
+                <form id="roomUpdateForm" class="grid six">
+                    <label><span>ID</span><input name="roomId" type="number" required></label>
+                    <label><span>房间号</span><input name="roomNo" required></label>
+                    <label><span>房型</span><input name="roomType" required></label>
+                    <label><span>价格</span><input name="price" type="number" step="0.01" required></label>
+                    <label><span>状态</span><input name="status" required></label>
+                    <label><span>备注</span><input name="remark"></label>
+                    <button class="primary" type="submit">修改房间</button>
+                </form>
+                <form id="roomDeleteForm" class="grid two">
+                    <label><span>房间 ID</span><input name="roomId" type="number" required></label>
+                    <button class="danger" type="submit">删除房间</button>
+                </form>
+            </div>
+
+            <div class="card tab-pane" data-pane="adminOrders">
+                <div class="section-head">
+                    <h2>订单管理</h2>
+                    <p>对应管理员查看、确认、完成、取消、删除订单。</p>
+                </div>
+                <form id="allOrdersForm" class="grid two">
+                    <label><span>状态筛选</span><input name="status"></label>
+                    <button class="primary" type="submit">查询全部订单</button>
+                </form>
+                <form id="adminOrderActionForm" class="grid three">
+                    <label><span>订单编号</span><input name="orderId" type="number" required></label>
+                    <label>
+                        <span>操作</span>
+                        <select name="action">
+                            <option value="confirm">确认订单</option>
+                            <option value="complete">完成订单</option>
+                            <option value="cancel">取消订单</option>
+                            <option value="delete">删除订单</option>
+                        </select>
+                    </label>
+                    <button class="primary" type="submit">执行操作</button>
+                </form>
+                <div id="allOrdersTable"></div>
+            </div>
+
+            <div class="card tab-pane" data-pane="stats">
+                <div class="section-head">
+                    <h2>统计面板</h2>
+                    <p>对应房间状态统计、订单状态统计和总收入。</p>
+                </div>
+                <div class="inline-actions">
+                    <button class="primary" type="button" id="loadStatsBtn">刷新统计</button>
+                </div>
+                <div id="statsView" class="stats-grid"></div>
+            </div>
+        </section>
+
+        <section class="toast hidden" id="toast"></section>
+    </main>
+</div>
+<script src="/app.js"></script>
+</body>
+</html>
